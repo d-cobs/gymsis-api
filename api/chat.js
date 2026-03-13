@@ -14,8 +14,6 @@ export default async function handler(req, res) {
   const apiKey = process.env.GEMINI_API_KEY;
   if (!apiKey) return res.status(500).json({ error: 'API key not configured' });
 
-  const SYSTEM_PROMPT = `You are GYM SIS — a tough-love, knowledgeable AI personal trainer. You're direct, motivating, and real. You know your stuff: strength training, cardio, mobility, recovery, nutrition. You give specific, actionable advice. Keep responses concise but complete. Use occasional fitness lingo. Never be preachy or overly cautious. You're a sis who happens to be a trainer — warm but no BS.`;
-
   try {
     const response = await fetch(
       `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`,
@@ -23,12 +21,14 @@ export default async function handler(req, res) {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          system_instruction: { parts: [{ text: SYSTEM_PROMPT }] },
           contents: messages.map(m => ({
             role: m.role === 'user' ? 'user' : 'model',
             parts: [{ text: m.content }]
           })),
-          generationConfig: { temperature: 0.85, maxOutputTokens: 1024 }
+          generationConfig: {
+            temperature: 0.9,
+            maxOutputTokens: 2048
+          }
         })
       }
     );
