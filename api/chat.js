@@ -24,9 +24,10 @@ export default async function handler(req, res) {
             role: m.role === 'user' ? 'user' : 'model',
             parts: [{ text: m.content }]
           })),
-          generationConfig: {
-            temperature: 0.9,
-            maxOutputTokens: 2048
+         generationConfig: {
+  temperature: 0.9,
+  maxOutputTokens: 8192
+}
           }
         })
       }
